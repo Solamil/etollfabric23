@@ -1,0 +1,46 @@
+<?xml version="1.0" encoding="utf-8"?>
+<gpx xmlns="http://www.topografix.com/GPX/1/1" version="1.1" creator="https://mapy.cz/">
+	<title>I35</title>
+	<version>0.1</version>
+	<wpt lat="50.615029" lon="15.111842">
+		<ele>317.000000</ele>
+		<name>Nový bod</name>
+	</wpt>
+	<wpt lat="50.614870" lon="15.111965">
+		<ele>317.000000</ele>
+		<name>Nový bod</name>
+	</wpt>
+	<wpt lat="50.614716" lon="15.112089">
+		<ele>316.441528</ele>
+		<name>Nový bod</name>
+	</wpt>
+	<wpt lat="50.614553" lon="15.112212">
+		<ele>316.000000</ele>
+		<name>Nový bod</name>
+	</wpt>
+	<wpt lat="50.614389" lon="15.112335">
+		<ele>316.000000</ele>
+		<name>Nový bod</name>
+	</wpt>
+	<wpt lat="50.614224" lon="15.112464">
+		<ele>315.445984</ele>
+		<name>Nový bod</name>
+	</wpt>
+	<wpt lat="50.614059" lon="15.112588">
+		<ele>315.000000</ele>
+		<name>Nový bod</name>
+	</wpt>
+	<wpt lat="50.613898" lon="15.112700">
+		<ele>315.000000</ele>
+		<name>Nový bod</name>
+	</wpt>
+	<wpt lat="50.613737" lon="15.112821">
+		<ele>315.000000</ele>
+		<name>Nový bod</name>
+	</wpt>
+	<wpt lat="50.613573" lon="15.112936">
+		<ele>314.006073</ele>
+		<name>Nový bod</name>
+	</wpt>
+</gpx>
+
