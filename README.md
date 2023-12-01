@@ -1,7 +1,7 @@
 ## Electronic Toll Road via Blockchain
 The bachelor thesis on electronic toll road.
-This project applied Blockchain technology especially DLT (Distributed Ledger Technology) - Hyperledger Fabric to record payments for toll road from OBU (On Board Unit).
-The toll road system has many similarities with toll road system used especially in Czechia and the EU.
+This project applied Blockchain technology especially DLT (Distributed Ledger Technology) - [Hyperledger Fabric](https://hyperledger-fabric.readthedocs.io/en/latest/index.html) to record payments for toll road from OBU (On Board Unit).
+The toll road system has many similarities with toll road system used especially in [Czechia](https://mytocz.eu/en/) and the EU.
 
 The project is structured as followed:
 
@@ -11,10 +11,10 @@ The project is structured as followed:
 
 ## Installation
 
-- Follow [these][https://hyperledger-fabric.readthedocs.io/en/latest/prereqs.html] instructions to install prerequisites for Hyperledger Fabric.
-- Then go onto [these][https://hyperledger-fabric.readthedocs.io/en/latest/install.html] instructions to install Fabric and Fabric samples.
+- Follow [these](https://hyperledger-fabric.readthedocs.io/en/latest/prereqs.html) instructions to install prerequisites for Hyperledger Fabric.
+- Then go onto [these](https://hyperledger-fabric.readthedocs.io/en/latest/install.html) instructions to install Fabric and Fabric samples.
 
-- Clone this project `git clone https://github.com/Solamil/fabrictoll23`
+- Clone this project `git clone https://github.com/Solamil/etollfabric23`
 
 - The directory `asset-toll/` copy to your directory `fabric-samples/` directory.
 
