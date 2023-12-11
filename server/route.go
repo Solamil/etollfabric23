@@ -1,10 +1,10 @@
 package server
 
 import (
-	"os"
 	"fmt"
-	"strconv"
 	"math"
+	"os"
+	"strconv"
 
 	"github.com/beevik/etree"
 )
@@ -12,20 +12,19 @@ import (
 const earthRadius = 6371000 // Radius of the Earth in meters
 
 type WptRecords struct {
-	LatRad []float64 `json:"latRad"`
-	LonRad []float64 `json:"lonRad"`
+	LatRad    []float64 `json:"latRad"`
+	LonRad    []float64 `json:"lonRad"`
 	Distances []float64 `json:"distances"`
-	Version string `json:"version"`
-	Len int `json:"len"`
-	Name string `json:"name"`
-	Checksum string `json:"checksum"`
+	Version   string    `json:"version"`
+	Len       int       `json:"len"`
+	Name      string    `json:"name"`
+	Checksum  string    `json:"checksum"`
 }
 
 type Polygon struct {
-	I []int `json:"i"` // i - road
-	J []int `json:"j"` // j - point of the road
-	Time []string `json:"time"` 
-	
+	I    []int    `json:"i"` // i - road
+	J    []int    `json:"j"` // j - point of the road
+	Time []string `json:"time"`
 }
 
 var Model []WptRecords
@@ -97,4 +96,3 @@ func Haversine(lat1, lon1, lat2, lon2 float64) float64 {
 
 	return distance
 }
-

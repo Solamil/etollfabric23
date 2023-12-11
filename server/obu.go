@@ -2,32 +2,31 @@ package server
 
 import (
 	"encoding/json"
-	"os"
 	"fmt"
-	"path/filepath"
 	"log"
+	"os"
+	"path/filepath"
 
 	"github.com/hyperledger/fabric-sdk-go/pkg/core/config"
 	"github.com/hyperledger/fabric-sdk-go/pkg/gateway"
 )
 
 type OnBoardUnit struct {
-	Axles 	        int     `json:"Axles"`
-	Country	        string  `json:"Country"`
-	Credit		float64 `json:"Credit"`
-	Currency        string  `json:"Currency"`
-	ID              string  `json:"ID"`
-	SPZ             string  `json:"SPZ"`
-	Weight 	        int     `json:"Weight"`
-	Emission      	string  `json:"Emission"` 
-	Category	string  `json:"Category"`
+	Axles    int     `json:"Axles"`
+	Country  string  `json:"Country"`
+	Credit   float64 `json:"Credit"`
+	Currency string  `json:"Currency"`
+	ID       string  `json:"ID"`
+	SPZ      string  `json:"SPZ"`
+	Weight   int     `json:"Weight"`
+	Emission string  `json:"Emission"`
+	Category string  `json:"Category"`
 }
+
 var gw *gateway.Gateway
 var contract *gateway.Contract
 
-
 var obuJsonList []OnBoardUnit
-
 
 func GetObu(id, spz, country, dbType string) *OnBoardUnit {
 	if contract == nil {
@@ -96,7 +95,6 @@ func CreateObu(o *OnBoardUnit, dbType string) {
 		fmt.Errorf("%v", err)
 	}
 
-
 }
 
 func DeleteObu(id, spz, country string, dbType string) {
@@ -112,10 +110,10 @@ func DeleteObu(id, spz, country string, dbType string) {
 
 func InitDb(dbType string) {
 	switch dbType {
-		case "Blockchain":
-			initDbBlockchain("channel1", "toll")
-		case "JSON":
-			initDbJson(filepath.Join("obu", "obuList.json"))
+	case "Blockchain":
+		initDbBlockchain("channel1", "toll")
+	case "JSON":
+		initDbJson(filepath.Join("obu", "obuList.json"))
 	}
 }
 
@@ -184,7 +182,7 @@ func initDbJson(filepath string) {
 
 func CloseDbBlockchain() {
 	if gw != nil {
-		gw.Close()	
+		gw.Close()
 	}
 }
 
