@@ -8,7 +8,6 @@ import (
 	"flag"
 	"fmt"
 	"io"
-	"io/ioutil"
 	"math"
 	"net"
 	"net/http"
@@ -157,7 +156,7 @@ func readJson(filename string, v any) error {
 		return err
 	}
 	defer result.Close()
-	byteValue, _ := ioutil.ReadAll(result)
+	byteValue, _ := io.ReadAll(result)
 	json.Unmarshal(byteValue, &v)
 
 	return nil
@@ -195,7 +194,7 @@ func readGpx(filename string, route *wptRecords) error {
 	if len(route.LatRad) == len(route.LonRad) {
 		route.Len = len(route.LatRad)
 	} else {
-		return fmt.Errorf("Error: Inconsistency length of arrays LatRad and LonRad")
+		return fmt.Errorf("error: inconsistency length of arrays LatRad and LonRad")
 	}
 	return err
 }
