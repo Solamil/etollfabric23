@@ -1,72 +1,71 @@
 package main
+
 // On Board Unit (OBU)
 
 import (
+	"crypto/md5"
 	"encoding/json"
-	"fmt"
-	"math"
-	"os"
-	"io"
 	"flag"
+	"fmt"
+	"io"
 	"io/ioutil"
-	"strconv"
+	"math"
 	"net"
 	"net/http"
+	"os"
+	"path/filepath"
+	"strconv"
 	"strings"
 	"time"
-	"path/filepath"
-	"crypto/md5"
 
 	"github.com/beevik/etree"
 )
 
 type onBoardUnit struct {
-	Id string `json:"id"`
-	Spz string `json:"spz"`
-	Country string `json:"country"`
-	Credit float64 `json:"credit"`
-	Currency string `json:"currency"`
-	Weight int `json:"weight"`
-	Emission string `json:"emission"`
-	Category string `json:"category"`
-	Axles int `json:"axles"`
+	Id       string  `json:"id"`
+	Spz      string  `json:"spz"`
+	Country  string  `json:"country"`
+	Credit   float64 `json:"credit"`
+	Currency string  `json:"currency"`
+	Weight   int     `json:"weight"`
+	Emission string  `json:"emission"`
+	Category string  `json:"category"`
+	Axles    int     `json:"axles"`
 }
 
 type wptRecords struct {
-	LatRad []float64 `json:"latRad"`
-	LonRad []float64 `json:"lonRad"`
+	LatRad    []float64 `json:"latRad"`
+	LonRad    []float64 `json:"lonRad"`
 	Distances []float64 `json:"distances"`
-	Version string `json:"version"`
-	Len int `json:"len"`
-	Name string `json:"name"`
-	Checksum string `json:"checksum"`
+	Version   string    `json:"version"`
+	Len       int       `json:"len"`
+	Name      string    `json:"name"`
+	Checksum  string    `json:"checksum"`
 }
 
 type polygon struct {
-	I []int `json:"i"` // i - road
-	J []int `json:"j"` // j - point of the road
-	Time []string `json:"time"` 
-	
+	I    []int    `json:"i"` // i - road
+	J    []int    `json:"j"` // j - point of the road
+	Time []string `json:"time"`
 }
 
 type ticket struct {
-	Obu onBoardUnit `json:"obu"`
-	CheckPoints polygon `json:"polygon"`
+	Obu         onBoardUnit `json:"obu"`
+	CheckPoints polygon     `json:"polygon"`
 }
 
 const CACHE_DIR = "cache"
 const URL_SERVER = "http://localhost:8905"
 const EARTH_RADIUS = 6371000 // Radius of the Earth in meters
-const THRESHOLD = 20  // Threshold for algorithm in meters 
+const THRESHOLD = 20         // Threshold for algorithm in meters
 const OBU_NAME = "obu1"
 
 var model []wptRecords
 var route wptRecords
-var obu onBoardUnit 
+var obu onBoardUnit
 
-
-func main(){
-	obuName := flag.String("name", OBU_NAME, "OBU name") 	
+func main() {
+	obuName := flag.String("name", OBU_NAME, "OBU name")
 	flag.Parse()
 
 	err := readJson(fmt.Sprintf("%s.json", *obuName), &obu)
@@ -97,29 +96,28 @@ func main(){
 		return
 	}
 	sendTicket(URL_SERVER, checkPoints, obu)
-//	fmt.Println(model[0].LatRad)
+	// fmt.Println(model[0].LatRad)
 }
 
 func driveAlgorithm(route wptRecords, checkPoints *polygon) {
-//	var distance float64
+	//	var distance float64
 	var nearest_i int
 	var nearest_j int
-	
-	
+
 	for i := 0; i < route.Len; i++ {
 		t := time.Now()
 		calcDistanceToModel(route.LatRad[i], route.LonRad[i])
-		
+
 		shortestDistanceInModel(&nearest_i, &nearest_j)
 
-		if findPair(checkPoints.I, checkPoints.J, nearest_i, nearest_j) == -1 && model[nearest_i].Distances[nearest_j] <= THRESHOLD {// Check if point is not already in array
-									 // Check if distance is within THRESHOLD to be evaluated as paid road
+		if findPair(checkPoints.I, checkPoints.J, nearest_i, nearest_j) == -1 && model[nearest_i].Distances[nearest_j] <= THRESHOLD { // Check if point is not already in array
+			// Check if distance is within THRESHOLD to be evaluated as paid road
 			checkPoints.I = append(checkPoints.I, nearest_i) // Road section
 			checkPoints.J = append(checkPoints.J, nearest_j) // Point of the road
-			checkPoints.Time = append(checkPoints.Time, t.Format(time.RFC3339)) 
+			checkPoints.Time = append(checkPoints.Time, t.Format(time.RFC3339))
 		}
-//		fmt.Println(nearest_i, nearest_j)
-//		fmt.Println(model[nearest_i].Distances[nearest_j])	
+		//		fmt.Println(nearest_i, nearest_j)
+		//		fmt.Println(model[nearest_i].Distances[nearest_j])
 	}
 	fmt.Println(*checkPoints)
 }
@@ -130,11 +128,11 @@ func calcDistanceToModel(latRad float64, lonRad float64) {
 		for j := 0; j < v.Len; j++ {
 			distance := haversine(latRad, lonRad, v.LatRad[j], v.LonRad[j])
 			model[i].Distances[j] = distance
-		} 
+		}
 	}
 }
 
-func shortestDistanceInModel(index_i, index_j *int){
+func shortestDistanceInModel(index_i, index_j *int) {
 	result := model[0].Distances[0]
 	for i, v := range model {
 		for j := 0; j < v.Len; j++ {
@@ -143,7 +141,7 @@ func shortestDistanceInModel(index_i, index_j *int){
 				*index_i = i
 				*index_j = j
 			}
-		} 
+		}
 
 	}
 }
@@ -233,7 +231,7 @@ func uptodate(filename, url string, model *[]wptRecords) bool {
 	var versions []wptRecords
 	urlVersion := fmt.Sprintf("%s?v", url)
 	result := newRequest(urlVersion)
-	if result == ""	 {
+	if result == "" {
 		return false
 	}
 	json.Unmarshal([]byte(result), &versions)
@@ -242,7 +240,7 @@ func uptodate(filename, url string, model *[]wptRecords) bool {
 		d := fmt.Sprintf("%+v", (*model)[i])
 		h := hash([]byte(d))
 
-		if versions[i].Version != (*model)[i].Version || 
+		if versions[i].Version != (*model)[i].Version ||
 			versions[i].Checksum != h {
 			return false
 		}
@@ -275,7 +273,7 @@ func sendTicket(urlServer string, checkPoints polygon, obu onBoardUnit) {
 	var t ticket
 	t.CheckPoints = checkPoints
 	t.Obu = obu
-	
+
 	byteResult, _ := json.Marshal(t)
 	// fmt.Printf("%s", string(byteResult))
 	payload := strings.NewReader(string(byteResult))
@@ -342,14 +340,14 @@ func writeFile(dir, filename, value string) {
 }
 
 func findPair(array1, array2 []int, value1, value2 int) int {
-	var index int = -1	
+	var index int = -1
 	if len(array1) != len(array2) {
 		fmt.Printf("error: Array1 and Array2 dont have the same length.")
 		return index
 	}
 	var i = findValue(array1, value1)
 	if i == findValue(array2, value2) {
-		index = i 
+		index = i
 	}
 	return index
 }
@@ -361,7 +359,7 @@ func findValue(array []int, value1 int) int {
 			index = i
 		}
 	}
-	return index 
+	return index
 }
 
 // Haversine calculates the distance between two GPS coordinates using the Haversine formula.
