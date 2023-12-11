@@ -58,7 +58,7 @@ func ticket_handler(w http.ResponseWriter, r *http.Request) {
 		fmt.Println(err.Error())
 	}
 	o := t.Obu
-	obu := server.GetObu(o.ID, o.SPZ, o.Country, dbType)
+	obu, _ := server.GetObu(o.ID, o.SPZ, o.Country, dbType)
 	if obu == nil {
 		w.Write([]byte("Not found"))
 		// handle unexpexted OBU
@@ -76,7 +76,7 @@ func obu_handler(w http.ResponseWriter, r *http.Request) {
 	if err := json.NewDecoder(r.Body).Decode(&o); err != nil {
 		fmt.Println(err.Error())
 	}
-	obu := server.GetObu(o.ID, o.SPZ, o.Country, dbType)
+	obu, _ := server.GetObu(o.ID, o.SPZ, o.Country, dbType)
 	if obu == nil {
 		w.Write([]byte("error: OBU not found"))
 		return

@@ -26,94 +26,94 @@ type OnBoardUnit struct {
 var gw *gateway.Gateway
 var contract *gateway.Contract
 
-var obuJsonList []OnBoardUnit
+// var obuJsonList []OnBoardUnit
 
-func GetObu(id, spz, country, dbType string) *OnBoardUnit {
+func GetObu(id, spz, country, dbType string) (*OnBoardUnit, error) {
 	if contract == nil {
-		fmt.Errorf("Database %s is not initialized", dbType)
-		return nil
+		return nil, fmt.Errorf("error: database %s is not initialized", dbType)
 
 	}
 	result, err := contract.EvaluateTransaction("ReadObu", id, spz, country)
 	if err != nil {
-		fmt.Errorf("%v", err)
-		return nil
+		return nil, err 
 	}
 	var o OnBoardUnit
-	err = json.Unmarshal(result, &o)
-	return &o
+	_ = json.Unmarshal(result, &o)
+	return &o, nil
 }
 
-func UpdateObu(id, spz, country, newEmission, newWeight, newAxles string, dbType string) {
+func UpdateObu(id, spz, country, newEmission, newWeight, newAxles string, dbType string) error {
 	if contract == nil {
-		fmt.Errorf("Database %s is not initialized", dbType)
-		return
+		return fmt.Errorf("error: database %s is not initialized", dbType)
 
 	}
 	_, err := contract.SubmitTransaction("UpdateObu", id, spz, country, newEmission, newWeight, newAxles)
 	if err != nil {
-		fmt.Errorf("%v", err)
+		return err 
 	}
+	return nil
 }
 
-func SetTollAmount(o *OnBoardUnit, amount float64, dbType string) {
+func SetTollAmount(o *OnBoardUnit, amount float64, dbType string) error {
 	if contract == nil {
-		fmt.Errorf("Database %s is not initialized", dbType)
-		return
+		return fmt.Errorf("error: database %s is not initialized", dbType)
 	}
 
 	obuByte, err := contract.SubmitTransaction("TollRoadObu", o.ID, o.SPZ, o.Country, fmt.Sprintf("%.2f", amount))
 	if err != nil {
-		fmt.Errorf("%v", err)
+		return err
 	}
 	err = json.Unmarshal(obuByte, o)
 	if err != nil {
-		fmt.Errorf("%v", err)
+		return err
 	}
+	return nil
 }
 
-func SetNullCredit(id, spz, country, dbType string) {
+func SetNullCredit(id, spz, country, dbType string) error{
 	if contract == nil {
-		fmt.Errorf("Database %s is not initialized", dbType)
-		return
+		return fmt.Errorf("error: database %s is not initialized", dbType)
+		
 	}
 
 	_, err := contract.SubmitTransaction("SetNullCredit", id, spz, country)
 	if err != nil {
-		fmt.Errorf("%v", err)
+		return fmt.Errorf("%v", err)
 	}
+	return nil
 }
 
-func CreateObu(o *OnBoardUnit, dbType string) {
+func CreateObu(o *OnBoardUnit, dbType string) error {
 	if contract == nil {
-		fmt.Errorf("Database %s is not initialized", dbType)
-		return
+		return fmt.Errorf("error: database %s is not initialized", dbType)
 	}
 
 	_, err := contract.SubmitTransaction("CreateObu", o.ID, o.SPZ, o.Country, o.Currency, o.Emission, o.Category, fmt.Sprintf("%d", o.Weight), fmt.Sprintf("%d", o.Axles))
 	if err != nil {
-		fmt.Errorf("%v", err)
+		return err 
 	}
+	return nil
 
 }
 
-func DeleteObu(id, spz, country string, dbType string) {
+func DeleteObu(id, spz, country string, dbType string) error {
 	if contract == nil {
-		fmt.Errorf("Database %s is not initialized", dbType)
-		return
+		return fmt.Errorf("error: database %s is not initialized", dbType)
 	}
 	_, err := contract.SubmitTransaction("DeleteObu", id, spz, country)
 	if err != nil {
-		fmt.Errorf("%v", err)
+		return err 
 	}
+	return nil
 }
 
 func InitDb(dbType string) {
 	switch dbType {
-	case "Blockchain":
-		initDbBlockchain("channel1", "toll")
 	case "JSON":
 		initDbJson(filepath.Join("obu", "obuList.json"))
+	default:
+		initDbBlockchain("channel1", "toll")
+	
 	}
 }
 
