@@ -9,6 +9,12 @@ The project is structured as followed:
 - `server/`  The server opens connection to Fabric database and comunicates with OBUs.
 - `asset-toll/` The smart contract for Fabric, written in Go. It stores informations about OBUs and their payments.
 
+## Prerequisites
+
+- `Go` version >= 1.19, `Git`
+
+The application is written in [Golang](https://go.dev/).
+
 ## Installation
 
 - Follow [these](https://hyperledger-fabric.readthedocs.io/en/latest/prereqs.html) instructions to install prerequisites for Hyperledger Fabric.
