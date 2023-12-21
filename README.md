@@ -1,4 +1,4 @@
-## Electronic Toll Road via Blockchain
+## Electronic Toll Gate under the hood Blockchain
 The bachelor thesis on electronic toll road.
 This project applied Blockchain technology especially DLT ([Distributed Ledger Technology](https://en.wikipedia.org/wiki/Distributed_ledger)) - [Hyperledger Fabric](https://hyperledger-fabric.readthedocs.io/en/latest/index.html) to record payments for toll road from OBU (On Board Unit).
 The toll road system has many similarities with toll road system used especially in [Czechia](https://mytocz.eu/en/) and the EU.
